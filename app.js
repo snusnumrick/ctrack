@@ -111,8 +111,8 @@ function updateStats() {
     const totalHours = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.hours || 0), 0);
     const totalMiles = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.miles || 0), 0);
     
-    totalHoursEl.textContent = totalHours;
-    totalMilesEl.textContent = totalMiles;
+    totalHoursEl.textContent = Number(totalHours).toFixed(1);
+    totalMilesEl.textContent = Number(totalMiles).toFixed(1);
 }
 
 // Show entry form
