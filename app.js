@@ -97,7 +97,7 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     dayEl.innerHTML = `
         <div class="font-bold">${day}</div>
         ${entry.hours ? `<div class="text-sm">${formatDuration(entry.hours)}</div>` : ''}
-        ${entry.miles ? `<div class="text-sm">${Number(entry.miles).toFixed(1)}mi</div>` : ''}
+        ${entry.miles ? `<div class="text-sm">${Number(entry.miles).toFixed(1)}</div>` : ''}
     `;
     
     return dayEl;
