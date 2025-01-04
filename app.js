@@ -104,6 +104,13 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
 }
 
 // Update stats
+function formatDuration(hours) {
+    const totalMinutes = Math.round(hours * 60);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
 function updateStats() {
     const currentMonthEntries = Object.entries(projectData.entries)
         .filter(([date]) => date.startsWith(currentDate.toISOString().slice(0, 7)));
@@ -111,7 +118,7 @@ function updateStats() {
     const totalHours = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.hours || 0), 0);
     const totalMiles = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.miles || 0), 0);
     
-    totalHoursEl.textContent = Number(totalHours).toFixed(1);
+    totalHoursEl.textContent = formatDuration(totalHours);
     totalMilesEl.textContent = Number(totalMiles).toFixed(1);
 }
 
