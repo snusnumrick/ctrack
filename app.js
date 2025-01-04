@@ -1,8 +1,13 @@
-// Sample JSON data structure
-const projectData = {
+// Load project data from localStorage or initialize
+let projectData = JSON.parse(localStorage.getItem('projectData')) || {
     projectTitle: "City Bridge Construction",
     entries: {}
 };
+
+// Save project data to localStorage
+function saveProjectData() {
+    localStorage.setItem('projectData', JSON.stringify(projectData));
+}
 
 // Calendar state
 let currentDate = new Date();
@@ -23,6 +28,9 @@ function init() {
     projectTitleEl.textContent = projectData.projectTitle;
     renderCalendar();
     setupEventListeners();
+    
+    // Save data before page unload
+    window.addEventListener('beforeunload', saveProjectData);
 }
 
 // Render calendar
@@ -117,6 +125,7 @@ function saveEntry() {
         miles: parseInt(milesInputEl.value) || 0
     };
     entryFormEl.classList.add('hidden');
+    saveProjectData();
     renderCalendar();
 }
 
