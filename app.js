@@ -118,6 +118,14 @@ function showEntryForm(date) {
     const dateStr = date.toISOString().split('T')[0];
     const entry = projectData.entries[dateStr] || { hours: 0, miles: 0 };
     
+    // Format date as "Month Day, Year"
+    const formattedDate = date.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    
+    document.getElementById('entry-date').textContent = formattedDate;
     hoursInputEl.value = entry.hours;
     milesInputEl.value = entry.miles;
     entryFormEl.classList.remove('hidden');
