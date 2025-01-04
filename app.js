@@ -1,6 +1,9 @@
+// Constants
+const DEFAULT_PROJECT_TITLE = "Plants";
+
 // Load project data from localStorage or initialize
 let projectData = JSON.parse(localStorage.getItem('projectData')) || {
-    projectTitle: "City Bridge Construction",
+    projectTitle: DEFAULT_PROJECT_TITLE,
     entries: {}
 };
 
