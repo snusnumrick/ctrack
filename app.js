@@ -23,8 +23,11 @@ const totalMilesEl = document.getElementById('total-miles');
 const currentMonthEl = document.getElementById('current-month');
 const calendarEl = document.getElementById('calendar');
 const entryFormEl = document.getElementById('entry-form');
-const hoursInputEl = document.getElementById('hours-input');
-const milesInputEl = document.getElementById('miles-input');
+const startTimeEl = document.getElementById('start-time');
+const endTimeEl = document.getElementById('end-time');
+const setNowEl = document.getElementById('set-now');
+const startMileageEl = document.getElementById('start-mileage');
+const endMileageEl = document.getElementById('end-mileage');
 
 // Initialize app
 function init() {
@@ -116,7 +119,12 @@ function updateStats() {
 function showEntryForm(date) {
     selectedDate = date;
     const dateStr = date.toISOString().split('T')[0];
-    const entry = projectData.entries[dateStr] || { hours: 0, miles: 0 };
+    const entry = projectData.entries[dateStr] || { 
+        startTime: '09:00',
+        endTime: '17:00',
+        startMileage: 0,
+        endMileage: 0
+    };
     
     // Format date as "Month Day, Year"
     const formattedDate = date.toLocaleDateString('en-US', {
@@ -126,18 +134,36 @@ function showEntryForm(date) {
     });
     
     document.getElementById('entry-date').textContent = formattedDate;
-    hoursInputEl.value = entry.hours;
-    milesInputEl.value = entry.miles;
+    startTimeEl.value = entry.startTime;
+    endTimeEl.value = entry.endTime;
+    startMileageEl.value = entry.startMileage;
+    endMileageEl.value = entry.endMileage;
     entryFormEl.classList.remove('hidden');
 }
 
 // Save entry
+function calculateHours(startTime, endTime) {
+    const [startH, startM] = startTime.split(':').map(Number);
+    const [endH, endM] = endTime.split(':').map(Number);
+    return ((endH * 60 + endM) - (startH * 60 + startM)) / 60;
+}
+
 function saveEntry() {
     const dateStr = selectedDate.toISOString().split('T')[0];
+    const startTime = startTimeEl.value;
+    const endTime = endTimeEl.value;
+    const startMileage = parseFloat(startMileageEl.value) || 0;
+    const endMileage = parseFloat(endMileageEl.value) || 0;
+    
     projectData.entries[dateStr] = {
-        hours: parseFloat(hoursInputEl.value) || 0,
-        miles: parseFloat(milesInputEl.value) || 0
+        startTime,
+        endTime,
+        startMileage,
+        endMileage,
+        hours: calculateHours(startTime, endTime),
+        miles: endMileage - startMileage
     };
+    
     entryFormEl.classList.add('hidden');
     saveProjectData();
     renderCalendar();
@@ -159,6 +185,14 @@ function setupEventListeners() {
     
     document.getElementById('cancel-entry').addEventListener('click', () => {
         entryFormEl.classList.add('hidden');
+    });
+    
+    // Set current time button
+    setNowEl.addEventListener('click', () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        endTimeEl.value = `${hours}:${minutes}`;
     });
 }
 
