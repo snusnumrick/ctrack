@@ -51,7 +51,12 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">Start Time</label>
-                            <input type="time" id="start-time" class="w-full p-2 border rounded">
+                            <div class="flex gap-2">
+                                <input type="time" id="start-time" class="w-full p-2 border rounded">
+                                <button type="button" id="set-now-start" class="px-3 bg-gray-100 hover:bg-gray-200 rounded">
+                                    Now
+                                </button>
+                            </div>
                         </div>
                         <div>
                             <label class="block text-sm text-gray-600 mb-1">End Time</label>

@@ -187,12 +187,19 @@ function setupEventListeners() {
         entryFormEl.classList.add('hidden');
     });
     
-    // Set current time button
+    // Set current time buttons
     setNowEl.addEventListener('click', () => {
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
         endTimeEl.value = `${hours}:${minutes}`;
+    });
+
+    document.getElementById('set-now-start').addEventListener('click', () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        startTimeEl.value = `${hours}:${minutes}`;
     });
 }
 
