@@ -97,13 +97,18 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     dayEl.innerHTML = `
         <div class="font-bold">${day}</div>
         ${entry.hours ? `<div class="text-sm">${formatDuration(entry.hours)}</div>` : ''}
-        ${entry.miles ? `<div class="text-sm">${Number(entry.miles).toFixed(1)}</div>` : ''}
+        ${entry.miles ? `<div class="text-sm">${formatMiles(entry.miles)}</div>` : ''}
     `;
     
     return dayEl;
 }
 
 // Update stats
+function formatMiles(miles) {
+    const rounded = Number(miles).toFixed(1);
+    return rounded.endsWith('.0') ? `${Math.floor(miles)}mi` : rounded;
+}
+
 function formatDuration(hours) {
     const h = Math.floor(hours);
     const m = Math.round((hours - h) * 60);
