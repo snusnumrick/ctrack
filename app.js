@@ -105,10 +105,9 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
 
 // Update stats
 function formatDuration(hours) {
-    const totalMinutes = Math.round(hours * 60);
-    const h = Math.floor(totalMinutes / 60);
-    const m = totalMinutes % 60;
-    return m === 0 ? `${h}h` : `${h}h ${m}m`;
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    return m === 0 ? `${h}h` : `${h}:${String(m).padStart(2, '0')}`;
 }
 
 function updateStats() {
