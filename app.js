@@ -90,8 +90,8 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     
     dayEl.innerHTML = `
         <div class="font-bold">${day}</div>
-        ${entry.hours ? `<div class="text-sm">${entry.hours}h</div>` : ''}
-        ${entry.miles ? `<div class="text-sm">${entry.miles}mi</div>` : ''}
+        ${entry.hours ? `<div class="text-sm">${Number(entry.hours).toFixed(1)}h</div>` : ''}
+        ${entry.miles ? `<div class="text-sm">${Number(entry.miles).toFixed(1)}mi</div>` : ''}
     `;
     
     return dayEl;
@@ -124,8 +124,8 @@ function showEntryForm(date) {
 function saveEntry() {
     const dateStr = selectedDate.toISOString().split('T')[0];
     projectData.entries[dateStr] = {
-        hours: parseInt(hoursInputEl.value) || 0,
-        miles: parseInt(milesInputEl.value) || 0
+        hours: parseFloat(hoursInputEl.value) || 0,
+        miles: parseFloat(milesInputEl.value) || 0
     };
     entryFormEl.classList.add('hidden');
     saveProjectData();
