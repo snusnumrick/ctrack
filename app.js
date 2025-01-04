@@ -77,11 +77,14 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     }
     
     if (isToday) {
-        dayEl.classList.add('bg-blue-100');
+        dayEl.classList.add('bg-blue-100', 'hover:bg-blue-200', 'cursor-pointer');
     } else if (isFuture) {
         dayEl.classList.add('text-gray-400');
     } else {
         dayEl.classList.add('hover:bg-gray-200', 'cursor-pointer');
+    }
+    
+    if (!isFuture) {
         dayEl.addEventListener('click', () => showEntryForm(new Date(currentDate.getFullYear(), currentDate.getMonth(), day)));
     }
     
