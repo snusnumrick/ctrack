@@ -75,7 +75,7 @@ function renderCalendar() {
 // Create day element
 function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     const dayEl = document.createElement('div');
-    dayEl.className = 'p-2 text-center rounded-lg';
+    dayEl.className = 'p-2 text-center rounded-lg dark:text-gray-100';
     
     if (day === '') {
         dayEl.classList.add('invisible');
@@ -83,11 +83,11 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
     }
     
     if (isToday) {
-        dayEl.classList.add('bg-blue-100', 'hover:bg-blue-200', 'cursor-pointer');
+        dayEl.classList.add('bg-blue-100', 'dark:bg-blue-800', 'hover:bg-blue-200', 'dark:hover:bg-blue-700', 'cursor-pointer');
     } else if (isFuture) {
-        dayEl.classList.add('text-gray-400');
+        dayEl.classList.add('text-gray-400', 'dark:text-gray-500');
     } else {
-        dayEl.classList.add('hover:bg-gray-200', 'cursor-pointer');
+        dayEl.classList.add('hover:bg-gray-200', 'dark:hover:bg-gray-700', 'cursor-pointer');
     }
     
     if (!isFuture) {
