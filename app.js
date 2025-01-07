@@ -1,14 +1,53 @@
 // Constants
 const DEFAULT_PROJECT_TITLE = "Plants";
 
-// Load project data from localStorage or initialize
-let projectData = JSON.parse(localStorage.getItem('projectData')) || {
-    projectTitle: DEFAULT_PROJECT_TITLE,
-    entries: {}
-};
+// Data version - increment this when making breaking changes
+const DATA_VERSION = 1;
 
-// Save project data to localStorage
+// Load project data from localStorage with migration support
+let projectData = loadProjectData();
+
+function loadProjectData() {
+    // Get raw data from localStorage
+    const rawData = localStorage.getItem('projectData');
+    
+    // Initialize if no data exists
+    if (!rawData) {
+        return {
+            version: DATA_VERSION,
+            projectTitle: DEFAULT_PROJECT_TITLE,
+            entries: {}
+        };
+    }
+    
+    // Parse and migrate data
+    let data = JSON.parse(rawData);
+    
+    // Backup old data before migration
+    if (!data.version || data.version < DATA_VERSION) {
+        localStorage.setItem('projectData_backup_' + new Date().toISOString(), rawData);
+    }
+    
+    // Migration system
+    if (!data.version) {
+        // Version 0 to 1 migration
+        data = {
+            version: 1,
+            projectTitle: data.projectTitle || DEFAULT_PROJECT_TITLE,
+            entries: data.entries || {}
+        };
+    }
+    
+    // Add future migrations here using else if (data.version === X)
+    
+    // Save migrated data
+    localStorage.setItem('projectData', JSON.stringify(data));
+    return data;
+}
+
+// Save project data to localStorage with version
 function saveProjectData() {
+    projectData.version = DATA_VERSION;
     localStorage.setItem('projectData', JSON.stringify(projectData));
 }
 
