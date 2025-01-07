@@ -1,5 +1,7 @@
 // Constants
 const DEFAULT_PROJECT_TITLE = "Plants";
+// Data version - increment this when making breaking changes
+const DATA_VERSION = 1;
 
 // Export functions for testing
 if (typeof module !== 'undefined' && module.exports) {
@@ -12,9 +14,6 @@ if (typeof module !== 'undefined' && module.exports) {
         DEFAULT_PROJECT_TITLE
     };
 }
-
-// Data version - increment this when making breaking changes
-const DATA_VERSION = 1;
 
 // Load project data from localStorage with migration support
 let projectData = loadProjectData();
