@@ -1,11 +1,17 @@
-import {
+import * as app from '../app.js';
+
+// Use the exported functions
+const {
     calculateHours,
     formatDuration,
     formatMiles,
     loadProjectData,
     DATA_VERSION,
     DEFAULT_PROJECT_TITLE
-} from '../app.js';
+} = app;
+
+// Prevent automatic initialization
+app.init = () => {};
 
 // Mock DOM elements
 document.body.innerHTML = `
