@@ -7,6 +7,25 @@ const {
     DEFAULT_PROJECT_TITLE
 } = require('../app.js');
 
+// Mock localStorage
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    },
+    removeItem: (key) => {
+      delete store[key];
+    }
+  };
+})();
+
+global.localStorage = localStorageMock;
+
 describe('Plants Tracker', () => {
     describe('calculateHours()', () => {
         test('calculates hours between two times', () => {
