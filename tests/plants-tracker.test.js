@@ -11,7 +11,7 @@ import {
 
 // Initialize app manually for tests
 beforeEach(() => {
-    // Reset DOM
+    // Reset DOM and localStorage
     document.body.innerHTML = `
         <div id="project-title"></div>
         <div id="total-hours"></div>
@@ -31,33 +31,8 @@ beforeEach(() => {
         <button id="next-month"></button>
         <button id="set-now"></button>
         <button id="set-now-start"></button>
-        <div id="calendar"></div>
     `;
-    
-    // Reset localStorage
     localStorage.clear();
-    
-    // Create all required DOM elements
-    document.body.innerHTML = `
-        <div id="project-title"></div>
-        <div id="total-hours"></div>
-        <div id="total-miles"></div>
-        <div id="current-month"></div>
-        <div id="calendar"></div>
-        <div id="entry-form" class="hidden">
-            <input id="start-time">
-            <input id="end-time">
-            <input id="start-mileage">
-            <input id="end-mileage">
-            <div id="entry-date"></div>
-            <button id="save-entry"></button>
-            <button id="cancel-entry"></button>
-        </div>
-        <button id="prev-month"></button>
-        <button id="next-month"></button>
-        <button id="set-now"></button>
-        <button id="set-now-start"></button>
-    `;
     
     // Initialize app after DOM is set up
     init();
