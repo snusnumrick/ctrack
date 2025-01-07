@@ -61,23 +61,6 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock
 });
 
-// Mock localStorage and DOM elements
-const localStorageMock = (() => {
-  let store = {};
-  return {
-    getItem: (key) => store[key] || null,
-    setItem: (key, value) => {
-      store[key] = value.toString();
-    },
-    clear: () => {
-      store = {};
-    },
-    removeItem: (key) => {
-      delete store[key];
-    }
-  };
-})();
-
 global.localStorage = localStorageMock;
 
 describe('Plants Tracker', () => {
