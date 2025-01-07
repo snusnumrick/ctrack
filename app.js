@@ -1,6 +1,16 @@
 // Constants
 const DEFAULT_PROJECT_TITLE = "Plants";
 
+// Export functions for testing
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        calculateHours,
+        formatDuration,
+        formatMiles,
+        loadProjectData
+    };
+}
+
 // Data version - increment this when making breaking changes
 const DATA_VERSION = 1;
 
