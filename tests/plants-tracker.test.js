@@ -1,3 +1,18 @@
+// Set up basic DOM elements needed for tests
+document.body.innerHTML = `
+    <div id="project-title"></div>
+    <div id="total-hours"></div>
+    <div id="total-miles"></div>
+    <div id="current-month"></div>
+    <div id="calendar"></div>
+    <div id="entry-form">
+        <input id="start-time">
+        <input id="end-time">
+        <input id="start-mileage">
+        <input id="end-mileage">
+    </div>
+`;
+
 const {
     calculateHours,
     formatDuration,
