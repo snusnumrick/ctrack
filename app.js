@@ -114,6 +114,15 @@ function init() {
 function renderCalendar() {
     calendarEl.innerHTML = '';
     
+    // Add day names row
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    dayNames.forEach(day => {
+        const dayEl = document.createElement('div');
+        dayEl.className = 'p-2 text-center font-medium text-gray-600 dark:text-gray-400';
+        dayEl.textContent = day;
+        calendarEl.appendChild(dayEl);
+    });
+    
     // Get first day of month and total days
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
