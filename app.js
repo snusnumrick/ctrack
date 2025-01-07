@@ -11,7 +11,8 @@ if (typeof module !== 'undefined' && module.exports) {
         formatMiles,
         loadProjectData,
         DATA_VERSION,
-        DEFAULT_PROJECT_TITLE
+        DEFAULT_PROJECT_TITLE,
+        init
     };
 }
 

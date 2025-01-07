@@ -21,18 +21,18 @@ document.body.innerHTML = `
 `;
 
 // Import app functions without auto-init
-const app = require('../app.js');
 const {
     calculateHours,
     formatDuration,
     formatMiles,
     loadProjectData,
     DATA_VERSION,
-    DEFAULT_PROJECT_TITLE
-} = app;
+    DEFAULT_PROJECT_TITLE,
+    init
+} = require('../app.js');
 
 // Initialize app manually for tests
-app.init();
+init();
 
 // Mock localStorage and DOM elements
 const localStorageMock = (() => {
