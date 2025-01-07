@@ -38,8 +38,6 @@ beforeEach(() => {
     // Initialize DOM elements
     initDOMElements();
     
-    // Initialize app after DOM is set up
-    init();
 });
 
 // Mock localStorage and DOM elements
