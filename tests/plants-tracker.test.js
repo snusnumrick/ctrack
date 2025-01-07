@@ -1,4 +1,4 @@
-// Set up basic DOM elements needed for tests
+// Set up complete DOM elements needed for tests
 document.body.innerHTML = `
     <div id="project-title"></div>
     <div id="total-hours"></div>
@@ -10,7 +10,14 @@ document.body.innerHTML = `
         <input id="end-time">
         <input id="start-mileage">
         <input id="end-mileage">
+        <div id="entry-date"></div>
+        <button id="save-entry"></button>
+        <button id="cancel-entry"></button>
     </div>
+    <button id="prev-month"></button>
+    <button id="next-month"></button>
+    <button id="set-now"></button>
+    <button id="set-now-start"></button>
 `;
 
 // Import app functions without auto-init
