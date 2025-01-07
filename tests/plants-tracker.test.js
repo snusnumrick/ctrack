@@ -34,18 +34,8 @@ beforeEach(() => {
     `;
     localStorage.clear();
     
-    // Reinitialize DOM references
-    projectTitleEl = document.getElementById('project-title');
-    totalHoursEl = document.getElementById('total-hours');
-    totalMilesEl = document.getElementById('total-miles');
-    currentMonthEl = document.getElementById('current-month');
-    calendarEl = document.getElementById('calendar');
-    entryFormEl = document.getElementById('entry-form');
-    startTimeEl = document.getElementById('start-time');
-    endTimeEl = document.getElementById('end-time');
-    setNowEl = document.getElementById('set-now');
-    startMileageEl = document.getElementById('start-mileage');
-    endMileageEl = document.getElementById('end-mileage');
+    // Initialize DOM elements
+    initDOMElements();
     
     // Initialize app after DOM is set up
     init();
