@@ -1,4 +1,10 @@
-// Import app functions without auto-init
+jest.mock('../app.js', () => {
+    const originalModule = jest.requireActual('../app.js');
+    return {
+        ...originalModule,
+        init: jest.fn(),
+    };
+});
 import {
     calculateHours,
     formatDuration,
@@ -6,7 +12,6 @@ import {
     loadProjectData,
     DATA_VERSION,
     DEFAULT_PROJECT_TITLE,
-    init,
     initDOMElements
 } from '../app.js';
 
