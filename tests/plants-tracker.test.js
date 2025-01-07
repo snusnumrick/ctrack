@@ -21,7 +21,7 @@ document.body.innerHTML = `
 `;
 
 // Import app functions without auto-init
-const {
+import {
     calculateHours,
     formatDuration,
     formatMiles,
@@ -29,10 +29,38 @@ const {
     DATA_VERSION,
     DEFAULT_PROJECT_TITLE,
     init
-} = require('../app.js');
+} from '../app.js';
 
 // Initialize app manually for tests
-init();
+beforeEach(() => {
+    // Reset DOM
+    document.body.innerHTML = `
+        <div id="project-title"></div>
+        <div id="total-hours"></div>
+        <div id="total-miles"></div>
+        <div id="current-month"></div>
+        <div id="calendar"></div>
+        <div id="entry-form">
+            <input id="start-time">
+            <input id="end-time">
+            <input id="start-mileage">
+            <input id="end-mileage">
+            <div id="entry-date"></div>
+            <button id="save-entry"></button>
+            <button id="cancel-entry"></button>
+        </div>
+        <button id="prev-month"></button>
+        <button id="next-month"></button>
+        <button id="set-now"></button>
+        <button id="set-now-start"></button>
+    `;
+    
+    // Reset localStorage
+    localStorage.clear();
+    
+    // Initialize app
+    init();
+});
 
 // Mock localStorage and DOM elements
 const localStorageMock = (() => {
