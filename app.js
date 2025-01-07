@@ -7,7 +7,9 @@ if (typeof module !== 'undefined' && module.exports) {
         calculateHours,
         formatDuration,
         formatMiles,
-        loadProjectData
+        loadProjectData,
+        DATA_VERSION,
+        DEFAULT_PROJECT_TITLE
     };
 }
 

@@ -1,3 +1,12 @@
+const {
+    calculateHours,
+    formatDuration,
+    formatMiles,
+    loadProjectData,
+    DATA_VERSION,
+    DEFAULT_PROJECT_TITLE
+} = require('../app.js');
+
 describe('Plants Tracker', () => {
     describe('calculateHours()', () => {
         test('calculates hours between two times', () => {
