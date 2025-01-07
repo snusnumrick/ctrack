@@ -1,15 +1,15 @@
 const CACHE_NAME = 'plants-tracker-v1';
 const ASSETS = [
-  'ctrack/',
-  'ctrack/index.html',
-  'ctrack/app.js',
-  'ctrack/manifest.json',
-  'ctrack/icons/icon-192x192.png',
-  'ctrack/icons/icon-512x512.png',
-  'ctrack/favicon.ico',
-  'ctrack/icons/icon-16x16.png',
-  'ctrack/icons/icon-32x32.png',
-  'ctrack/icons/icon-48x48.png'
+  '/ctrack/',
+  '/ctrack/index.html',
+  '/ctrack/app.js',
+  '/ctrack/manifest.json',
+  '/ctrack/icons/icon-192x192.png',
+  '/ctrack/icons/icon-512x512.png',
+  '/ctrack/favicon.ico',
+  '/ctrack/icons/icon-16x16.png',
+  '/ctrack/icons/icon-32x32.png',
+  '/ctrack/icons/icon-48x48.png'
 ];
 
 // Install service worker and cache assets
