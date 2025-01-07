@@ -122,6 +122,7 @@ function initDOMElements() {
 function init() {
     initDOMElements();
     projectTitleEl.textContent = projectData.projectTitle;
+    projectTitleEl.classList.add('text-gray-900', 'dark:text-gray-100');
     renderCalendar();
     setupEventListeners();
     
