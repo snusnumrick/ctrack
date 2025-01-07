@@ -47,6 +47,22 @@ beforeEach(() => {
     startMileageEl = document.getElementById('start-mileage');
     endMileageEl = document.getElementById('end-mileage');
     
+    // Initialize DOM element references before init
+    let projectTitleEl, totalHoursEl, totalMilesEl, currentMonthEl, calendarEl, 
+        entryFormEl, startTimeEl, endTimeEl, setNowEl, startMileageEl, endMileageEl;
+        
+    projectTitleEl = document.getElementById('project-title');
+    totalHoursEl = document.getElementById('total-hours');
+    totalMilesEl = document.getElementById('total-miles');
+    currentMonthEl = document.getElementById('current-month');
+    calendarEl = document.getElementById('calendar');
+    entryFormEl = document.getElementById('entry-form');
+    startTimeEl = document.getElementById('start-time');
+    endTimeEl = document.getElementById('end-time');
+    setNowEl = document.getElementById('set-now');
+    startMileageEl = document.getElementById('start-mileage');
+    endMileageEl = document.getElementById('end-mileage');
+
     // Initialize app after DOM is set up
     init();
 });

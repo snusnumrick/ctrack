@@ -100,20 +100,26 @@ let currentDate = new Date();
 let selectedDate = null;
 
 // DOM Elements
-const projectTitleEl = document.getElementById('project-title');
-const totalHoursEl = document.getElementById('total-hours');
-const totalMilesEl = document.getElementById('total-miles');
-const currentMonthEl = document.getElementById('current-month');
-const calendarEl = document.getElementById('calendar');
-const entryFormEl = document.getElementById('entry-form');
-const startTimeEl = document.getElementById('start-time');
-const endTimeEl = document.getElementById('end-time');
-const setNowEl = document.getElementById('set-now');
-const startMileageEl = document.getElementById('start-mileage');
-const endMileageEl = document.getElementById('end-mileage');
+let projectTitleEl, totalHoursEl, totalMilesEl, currentMonthEl, calendarEl,
+    entryFormEl, startTimeEl, endTimeEl, setNowEl, startMileageEl, endMileageEl;
+
+function initDOMElements() {
+    projectTitleEl = document.getElementById('project-title');
+    totalHoursEl = document.getElementById('total-hours');
+    totalMilesEl = document.getElementById('total-miles');
+    currentMonthEl = document.getElementById('current-month');
+    calendarEl = document.getElementById('calendar');
+    entryFormEl = document.getElementById('entry-form');
+    startTimeEl = document.getElementById('start-time');
+    endTimeEl = document.getElementById('end-time');
+    setNowEl = document.getElementById('set-now');
+    startMileageEl = document.getElementById('start-mileage');
+    endMileageEl = document.getElementById('end-mileage');
+}
 
 // Initialize app
 function init() {
+    initDOMElements();
     projectTitleEl.textContent = projectData.projectTitle;
     renderCalendar();
     setupEventListeners();
