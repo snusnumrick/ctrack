@@ -7,6 +7,28 @@ import {
     DEFAULT_PROJECT_TITLE
 } from '../app.js';
 
+// Mock DOM elements
+document.body.innerHTML = `
+  <div id="project-title"></div>
+  <div id="total-hours"></div>
+  <div id="total-miles"></div>
+  <div id="current-month"></div>
+  <div id="calendar"></div>
+  <div id="entry-form" class="hidden">
+    <div id="entry-date"></div>
+    <input id="start-time" />
+    <input id="end-time" />
+    <input id="start-mileage" />
+    <input id="end-mileage" />
+    <button id="set-now"></button>
+    <button id="set-now-start"></button>
+    <button id="save-entry"></button>
+    <button id="cancel-entry"></button>
+  </div>
+  <button id="prev-month"></button>
+  <button id="next-month"></button>
+`;
+
 // Mock localStorage
 const localStorageMock = (() => {
   let store = {};
