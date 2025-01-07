@@ -37,6 +37,8 @@ beforeEach(() => {
         <button id="next-month"></button>
         <button id="set-now"></button>
         <button id="set-now-start"></button>
+        <button id="add-entry"></button>
+        <div id="entries-list"></div>
     `;
     localStorage.clear();
     
