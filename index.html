@@ -15,8 +15,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/ctrack/icons/icon-32x32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="/ctrack/icons/icon-48x48.png">
     <script>
-        // Register Service Worker
-        if ('serviceWorker' in navigator) {
+        // Register Service Worker only when served over http/https
+        if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
             navigator.serviceWorker.register('/ctrack/sw.js')
                 .then(registration => {
                     console.log('Service Worker registered with scope:', registration.scope);
