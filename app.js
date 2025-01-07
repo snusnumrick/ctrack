@@ -8,47 +8,79 @@ const DATA_VERSION = 1;
 let projectData = loadProjectData();
 
 function loadProjectData() {
-    // Get raw data from localStorage
-    const rawData = localStorage.getItem('projectData');
-    
-    // Initialize if no data exists
-    if (!rawData) {
+    try {
+        // Get raw data from localStorage
+        const rawData = localStorage.getItem('projectData');
+        
+        // Initialize if no data exists
+        if (!rawData) {
+            return {
+                version: DATA_VERSION,
+                projectTitle: DEFAULT_PROJECT_TITLE,
+                entries: {}
+            };
+        }
+        
+        // Parse and migrate data
+        let data = JSON.parse(rawData);
+        
+        // Backup old data before migration
+        if (!data.version || data.version < DATA_VERSION) {
+            const backupKey = 'projectData_backup_' + new Date().toISOString();
+            localStorage.setItem(backupKey, rawData);
+            console.log('Created data backup:', backupKey);
+        }
+        
+        // Migration system
+        if (!data.version) {
+            // Version 0 to 1 migration
+            data = {
+                version: 1,
+                projectTitle: data.projectTitle || DEFAULT_PROJECT_TITLE,
+                entries: data.entries || {}
+            };
+        }
+        
+        // Add future migrations here using else if (data.version === X)
+        
+        // Validate entries
+        if (data.entries) {
+            for (const [date, entry] of Object.entries(data.entries)) {
+                if (!entry.hours) entry.hours = 0;
+                if (!entry.miles) entry.miles = 0;
+                if (!entry.startTime) entry.startTime = '09:00';
+                if (!entry.endTime) entry.endTime = '17:00';
+            }
+        }
+        
+        // Save migrated data
+        localStorage.setItem('projectData', JSON.stringify(data));
+        return data;
+    } catch (error) {
+        console.error('Error loading project data:', error);
         return {
             version: DATA_VERSION,
             projectTitle: DEFAULT_PROJECT_TITLE,
             entries: {}
         };
     }
-    
-    // Parse and migrate data
-    let data = JSON.parse(rawData);
-    
-    // Backup old data before migration
-    if (!data.version || data.version < DATA_VERSION) {
-        localStorage.setItem('projectData_backup_' + new Date().toISOString(), rawData);
-    }
-    
-    // Migration system
-    if (!data.version) {
-        // Version 0 to 1 migration
-        data = {
-            version: 1,
-            projectTitle: data.projectTitle || DEFAULT_PROJECT_TITLE,
-            entries: data.entries || {}
-        };
-    }
-    
-    // Add future migrations here using else if (data.version === X)
-    
-    // Save migrated data
-    localStorage.setItem('projectData', JSON.stringify(data));
-    return data;
 }
 
 // Save project data to localStorage with version
 function saveProjectData() {
-    projectData.version = DATA_VERSION;
-    localStorage.setItem('projectData', JSON.stringify(projectData));
+    try {
+        projectData.version = DATA_VERSION;
+        localStorage.setItem('projectData', JSON.stringify(projectData));
+    } catch (error) {
+        console.error('Error saving project data:', error);
+        // Try to save to sessionStorage as fallback
+        try {
+            sessionStorage.setItem('projectData', JSON.stringify(projectData));
+            console.warn('Saved data to sessionStorage as fallback');
+        } catch (fallbackError) {
+            console.error('Failed to save data to sessionStorage:', fallbackError);
+        }
+    }
 }
 
 // Calendar state

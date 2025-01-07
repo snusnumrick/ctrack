@@ -32,6 +32,17 @@
         } else {
             document.documentElement.classList.remove('dark')
         }
+
+        // Check for data version mismatch
+        const storedData = localStorage.getItem('projectData');
+        if (storedData) {
+            const data = JSON.parse(storedData);
+            if (!data.version || data.version < 1) {
+                console.warn('Old data format detected - migrating data');
+                // Backup old data
+                localStorage.setItem('projectData_backup_' + new Date().toISOString(), storedData);
+            }
+        }
     </script>
     <title>Contractor Project Tracker</title>
     <link href="output.css" rel="stylesheet">
