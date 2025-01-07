@@ -15,6 +15,17 @@
     <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32x32.png">
     <link rel="icon" type="image/png" sizes="48x48" href="icons/icon-48x48.png">
     <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+
         // Enable Tailwind dark mode based on system preference
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark')
