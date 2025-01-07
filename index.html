@@ -7,17 +7,17 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Plants Tracker">
-    <link rel="apple-touch-icon" href="/ctrack/icons/icon-192x192.png">
-    <link rel="manifest" href="/ctrack/manifest.json">
-    <link rel="icon" type="image/png" href="/ctrack/icons/icon-192x192.png">
-    <link rel="icon" type="image/x-icon" href="/ctrack/favicon.ico">
-    <link rel="icon" type="image/png" sizes="16x16" href="/ctrack/icons/icon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/ctrack/icons/icon-32x32.png">
-    <link rel="icon" type="image/png" sizes="48x48" href="/ctrack/icons/icon-48x48.png">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/png" href="/icons/icon-192x192.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/icons/icon-48x48.png">
     <script>
         // Register Service Worker only when served over http/https
         if ('serviceWorker' in navigator && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
-            navigator.serviceWorker.register('/ctrack/sw.js')
+            navigator.serviceWorker.register('/sw.js')
                 .then(registration => {
                     console.log('Service Worker registered with scope:', registration.scope);
                 })
