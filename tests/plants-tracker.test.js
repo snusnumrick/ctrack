@@ -18,7 +18,7 @@ beforeEach(() => {
         <div id="total-miles"></div>
         <div id="current-month"></div>
         <div id="calendar"></div>
-        <div id="entry-form">
+        <div id="entry-form" class="hidden">
             <input id="start-time">
             <input id="end-time">
             <input id="start-mileage">
@@ -31,6 +31,7 @@ beforeEach(() => {
         <button id="next-month"></button>
         <button id="set-now"></button>
         <button id="set-now-start"></button>
+        <div id="calendar"></div>
     `;
     
     // Reset localStorage
