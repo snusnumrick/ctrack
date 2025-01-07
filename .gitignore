@@ -3,6 +3,9 @@ node_modules/
 dist/
 .output/
 
+# Tailwind output
+!output.css
+
 # Editor files
 .vscode/
 .idea/
