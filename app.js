@@ -12,7 +12,8 @@ if (typeof module !== 'undefined' && module.exports) {
         loadProjectData,
         DATA_VERSION,
         DEFAULT_PROJECT_TITLE,
-        init
+        init,
+        initDOMElements
     };
 }
 

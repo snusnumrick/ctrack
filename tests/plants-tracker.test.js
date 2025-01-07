@@ -6,7 +6,8 @@ import {
     loadProjectData,
     DATA_VERSION,
     DEFAULT_PROJECT_TITLE,
-    init
+    init,
+    initDOMElements
 } from '../app.js';
 
 // Initialize app manually for tests
