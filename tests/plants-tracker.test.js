@@ -1,25 +1,3 @@
-// Set up complete DOM elements needed for tests
-document.body.innerHTML = `
-    <div id="project-title"></div>
-    <div id="total-hours"></div>
-    <div id="total-miles"></div>
-    <div id="current-month"></div>
-    <div id="calendar"></div>
-    <div id="entry-form">
-        <input id="start-time">
-        <input id="end-time">
-        <input id="start-mileage">
-        <input id="end-mileage">
-        <div id="entry-date"></div>
-        <button id="save-entry"></button>
-        <button id="cancel-entry"></button>
-    </div>
-    <button id="prev-month"></button>
-    <button id="next-month"></button>
-    <button id="set-now"></button>
-    <button id="set-now-start"></button>
-`;
-
 // Import app functions without auto-init
 import {
     calculateHours,
@@ -60,6 +38,27 @@ beforeEach(() => {
     
     // Initialize app
     init();
+});
+
+// Mock localStorage and DOM elements
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    },
+    removeItem: (key) => {
+      delete store[key];
+    }
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
 });
 
 // Mock localStorage and DOM elements
