@@ -1,1 +1,38 @@
+# Development
+node_modules/
+dist/
+.output/
+
+# Editor files
+.vscode/
+.idea/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# Build output
+.output/
+dist/
+build/
+out/
+
+# Cache
+.cache/
+.temp/
+
+# Debug
+debug/
+*.debug
+
+# Testing
+coverage/
+.nyc_output/
+
+# Aider
 .aider*
