@@ -1,50 +1,35 @@
-jest.mock('../app.js', () => {
-    const originalModule = jest.requireActual('../app.js');
-    return {
-        ...originalModule,
-        init: jest.fn(),
-    };
-});
 import {
     calculateHours,
     formatDuration,
     formatMiles,
     loadProjectData,
     DATA_VERSION,
-    DEFAULT_PROJECT_TITLE,
-    initDOMElements
+    DEFAULT_PROJECT_TITLE
 } from '../app.js';
 
-// Initialize app manually for tests
+// Mock localStorage
+const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: (key) => store[key] || null,
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    clear: () => {
+      store = {};
+    },
+    removeItem: (key) => {
+      delete store[key];
+    }
+  };
+})();
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock
+});
+
 beforeEach(() => {
-    // Reset DOM and localStorage
-    document.body.innerHTML = `
-        <div id="project-title"></div>
-        <div id="total-hours"></div>
-        <div id="total-miles"></div>
-        <div id="current-month"></div>
-        <div id="calendar"></div>
-        <div id="entry-form" class="hidden">
-            <input id="start-time">
-            <input id="end-time">
-            <input id="start-mileage">
-            <input id="end-mileage">
-            <div id="entry-date"></div>
-            <button id="save-entry"></button>
-            <button id="cancel-entry"></button>
-        </div>
-        <button id="prev-month"></button>
-        <button id="next-month"></button>
-        <button id="set-now"></button>
-        <button id="set-now-start"></button>
-        <button id="add-entry"></button>
-        <div id="entries-list"></div>
-    `;
     localStorage.clear();
-    
-    // Initialize DOM elements
-    initDOMElements();
-    
 });
 
 // Mock localStorage and DOM elements
