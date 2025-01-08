@@ -230,8 +230,8 @@ function showEntryForm(date) {
     const dateStr = date.toISOString().split('T')[0];
     const entry = projectData.entries[dateStr] || { 
         intervals: [{
-            startTime: '09:00',
-            endTime: '17:00',
+            startTime: '',
+            endTime: '',
             startMileage: 0,
             endMileage: 0
         }]
@@ -252,9 +252,15 @@ function showEntryForm(date) {
     intervals = [];
     currentIntervalIndex = 0;
     
-    // Add each interval
+    // Add each interval with saved values
     entry.intervals.forEach(interval => {
-        addInterval(interval);
+        const newInterval = {
+            startTime: interval.startTime || '',
+            endTime: interval.endTime || '',
+            startMileage: interval.startMileage || 0,
+            endMileage: interval.endMileage || 0
+        };
+        addInterval(newInterval);
     });
     
     entryFormEl.classList.remove('hidden');
@@ -273,9 +279,9 @@ function addInterval(interval = {}) {
     const clone = template.content.cloneNode(true);
     
     const intervalEl = clone.querySelector('.interval-item');
-    // Initialize time fields as empty
-    intervalEl.querySelector('.interval-start-time').value = '';
-    intervalEl.querySelector('.interval-end-time').value = '';
+    // Set initial values from interval data
+    intervalEl.querySelector('.interval-start-time').value = interval.startTime || '';
+    intervalEl.querySelector('.interval-end-time').value = interval.endTime || '';
     
     // Add click handlers to initialize with current time
     intervalEl.querySelector('.interval-start-time').addEventListener('click', (e) => {
