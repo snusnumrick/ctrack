@@ -111,13 +111,9 @@ function initDOMElements() {
     currentMonthEl = document.getElementById('current-month');
     calendarEl = document.getElementById('calendar');
     entryFormEl = document.getElementById('entry-form');
-    startTimeEl = document.getElementById('start-time');
-    endTimeEl = document.getElementById('end-time');
-    setNowEl = document.getElementById('set-now');
-    setNowEl.innerHTML = '<i class="fas fa-angles-down"></i>';
-    document.getElementById('set-now-start').innerHTML = '<i class="fas fa-angles-down"></i>';
-    startMileageEl = document.getElementById('start-mileage');
-    endMileageEl = document.getElementById('end-mileage');
+    
+    // Remove references to old single time inputs
+    // Set now buttons are now handled within each interval
 }
 
 // Initialize app
@@ -233,10 +229,12 @@ function showEntryForm(date) {
     selectedDate = date;
     const dateStr = date.toISOString().split('T')[0];
     const entry = projectData.entries[dateStr] || { 
-        startTime: '09:00',
-        endTime: '17:00',
-        startMileage: 0,
-        endMileage: 0
+        intervals: [{
+            startTime: '',
+            endTime: '',
+            startMileage: 0,
+            endMileage: 0
+        }]
     };
     
     // Format date as "Month Day, Year"
@@ -246,12 +244,189 @@ function showEntryForm(date) {
         year: 'numeric'
     });
     
-    document.getElementById('entry-date').textContent = formattedDate;
-    startTimeEl.value = entry.startTime;
-    endTimeEl.value = entry.endTime;
-    startMileageEl.value = entry.startMileage;
-    endMileageEl.value = entry.endMileage;
+    const entryDateEl = document.getElementById('entry-date');
+    entryDateEl.textContent = formattedDate;
+    entryDateEl.classList.add('dark:text-gray-100');
+    
+    // Reset interval state
+    intervals = [];
+    currentIntervalIndex = 0;
+    
+    // Add each interval with saved values
+    entry.intervals.forEach(interval => {
+        const newInterval = {
+            startTime: interval.startTime || '',
+            endTime: interval.endTime || '',
+            startMileage: interval.startMileage || 0,
+            endMileage: interval.endMileage || 0
+        };
+        addInterval(newInterval);
+    });
+    
     entryFormEl.classList.remove('hidden');
+    // Reset interval state
+    currentIntervalIndex = 0;
+    updateIntervalDisplay();
+    setupIntervalNavigation();
+}
+
+let currentIntervalIndex = 0;
+let intervals = [];
+
+function addInterval(interval = {}) {
+    console.log('Adding new interval', { interval });
+    const template = document.getElementById('interval-template');
+    const clone = template.content.cloneNode(true);
+    
+    const intervalEl = clone.querySelector('.interval-item');
+    // Set initial values from interval data
+    intervalEl.querySelector('.interval-start-time').value = interval.startTime || '';
+    intervalEl.querySelector('.interval-end-time').value = interval.endTime || '';
+    
+    // Add click handlers to initialize with current time
+    intervalEl.querySelector('.interval-start-time').addEventListener('click', (e) => {
+        if (!e.target.value) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            e.target.value = `${hours}:${minutes}`;
+        }
+    });
+    
+    intervalEl.querySelector('.interval-end-time').addEventListener('click', (e) => {
+        if (!e.target.value) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            e.target.value = `${hours}:${minutes}`;
+        }
+    });
+    intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
+    intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
+
+    // Increment currentIntervalIndex when adding new interval
+    currentIntervalIndex = intervals.length;
+    
+    // Add remove interval handler
+    intervalEl.querySelector('.remove-interval').addEventListener('click', () => {
+        if (intervals.length > 1) {
+            intervals.splice(currentIntervalIndex, 1);
+            if (currentIntervalIndex >= intervals.length) {
+                currentIntervalIndex = intervals.length - 1;
+            }
+            updateIntervalDisplay();
+        }
+    });
+
+    intervals.push(intervalEl);
+    updateIntervalDisplay();
+}
+
+function updateIntervalDisplay() {
+    console.log('Updating interval display', { 
+        currentIntervalIndex,
+        intervalsLength: intervals.length,
+        intervals
+    });
+    const container = document.getElementById('interval-container');
+    container.innerHTML = '';
+    if (intervals.length > 0) {
+        container.appendChild(intervals[currentIntervalIndex]);
+    }
+    updateIntervalCounter();
+    updateNavButtons();
+}
+
+function updateIntervalCounter() {
+    const counter = document.getElementById('interval-counter');
+    counter.textContent = `${currentIntervalIndex + 1}/${intervals.length}`;
+}
+
+function updateNavButtons() {
+    const prevBtn = document.getElementById('prev-interval');
+    const nextBtn = document.getElementById('next-interval');
+    const removeBtns = document.querySelectorAll('.remove-interval');
+    
+    prevBtn.disabled = currentIntervalIndex === 0;
+    nextBtn.disabled = false;
+    
+    // Disable remove button if there's only one interval
+    removeBtns.forEach(btn => {
+        btn.disabled = intervals.length === 1;
+    });
+}
+
+function setupIntervalNavigation() {
+    console.log('Setting up interval navigation');
+    
+    // Get button references
+    const prevBtn = document.getElementById('prev-interval');
+    const nextBtn = document.getElementById('next-interval');
+    
+    // Debug button states
+    console.log('Button states before setup:', {
+        prevBtnExists: !!prevBtn,
+        nextBtnExists: !!nextBtn,
+        prevBtnDisabled: prevBtn?.disabled,
+        nextBtnDisabled: nextBtn?.disabled
+    });
+    
+    // Remove any existing event listeners by replacing buttons
+    const newPrevBtn = prevBtn.cloneNode(true);
+    const newNextBtn = nextBtn.cloneNode(true);
+    
+    // Store references to the new buttons
+    prevBtn.replaceWith(newPrevBtn);
+    nextBtn.replaceWith(newNextBtn);
+    
+    // Create new event handlers
+    const handlePrevClick = (e) => {
+        console.log('Previous interval clicked', {
+            eventType: e.type,
+            target: e.target,
+            currentIntervalIndex,
+            intervalsLength: intervals.length
+        });
+        if (currentIntervalIndex > 0) {
+            currentIntervalIndex--;
+            updateIntervalDisplay();
+        }
+    };
+
+    const handleNextClick = (e) => {
+        console.log('Next interval clicked', {
+            eventType: e.type,
+            target: e.target,
+            currentIntervalIndex,
+            intervalsLength: intervals.length
+        });
+        if (currentIntervalIndex < intervals.length - 1) {
+            currentIntervalIndex++;
+            updateIntervalDisplay();
+        } else {
+            console.log('Adding new interval via next button click');
+            addInterval();
+            currentIntervalIndex = intervals.length - 1;
+            updateIntervalDisplay();
+            updateNavButtons(); // Add this line to update button states
+        }
+    };
+    
+    // Add event listeners using the new handlers
+    newPrevBtn.addEventListener('click', handlePrevClick);
+    newNextBtn.addEventListener('click', handleNextClick);
+    
+    // Debug log that listeners were added
+    console.log('Event listeners added to navigation buttons');
+    
+    // Update button states
+    updateNavButtons();
+    
+    console.log('Interval navigation setup complete', {
+        currentIntervalIndex,
+        intervalsLength: intervals.length
+    });
+    
 }
 
 // Save entry
@@ -263,18 +438,38 @@ function calculateHours(startTime, endTime) {
 
 function saveEntry() {
     const dateStr = selectedDate.toISOString().split('T')[0];
-    const startTime = startTimeEl.value;
-    const endTime = endTimeEl.value;
-    const startMileage = parseFloat(startMileageEl.value) || 0;
-    const endMileage = parseFloat(endMileageEl.value) || 0;
+    const savedIntervals = [];
+    let totalHours = 0;
+    let totalMiles = 0;
     
+    // Get all intervals from the DOM
+    intervals.forEach(intervalEl => {
+        const startTime = intervalEl.querySelector('.interval-start-time').value;
+        const endTime = intervalEl.querySelector('.interval-end-time').value;
+        const startMileage = parseFloat(intervalEl.querySelector('.interval-start-mileage').value) || 0;
+        const endMileage = parseFloat(intervalEl.querySelector('.interval-end-mileage').value) || 0;
+        
+        const hours = calculateHours(startTime, endTime);
+        const miles = endMileage - startMileage;
+        
+        savedIntervals.push({
+            startTime,
+            endTime,
+            startMileage,
+            endMileage,
+            hours,
+            miles
+        });
+        
+        totalHours += hours;
+        totalMiles += miles;
+    });
+    
+    // Save all intervals and totals
     projectData.entries[dateStr] = {
-        startTime,
-        endTime,
-        startMileage,
-        endMileage,
-        hours: calculateHours(startTime, endTime),
-        miles: endMileage - startMileage
+        intervals: savedIntervals,
+        hours: totalHours,
+        miles: totalMiles
     };
     
     entryFormEl.classList.add('hidden');
@@ -300,20 +495,7 @@ function setupEventListeners() {
         entryFormEl.classList.add('hidden');
     });
     
-    // Set current time buttons
-    setNowEl.addEventListener('click', () => {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        endTimeEl.value = `${hours}:${minutes}`;
-    });
-
-    document.getElementById('set-now-start').addEventListener('click', () => {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        startTimeEl.value = `${hours}:${minutes}`;
-    });
+    // Set now functionality is handled within each interval
 }
 
 // Initialize app
