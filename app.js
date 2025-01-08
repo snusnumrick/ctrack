@@ -343,11 +343,13 @@ function setupIntervalNavigation() {
     // Remove any existing event listeners
     const newPrevBtn = prevBtn.cloneNode(true);
     const newNextBtn = nextBtn.cloneNode(true);
+    
+    // Store references to the new buttons
     prevBtn.replaceWith(newPrevBtn);
     nextBtn.replaceWith(newNextBtn);
     
-    // Add click handlers with more detailed logging
-    newPrevBtn.addEventListener('click', (e) => {
+    // Create new event handlers
+    const handlePrevClick = (e) => {
         console.log('Previous interval clicked', {
             eventType: e.type,
             target: e.target,
@@ -358,9 +360,9 @@ function setupIntervalNavigation() {
             currentIntervalIndex--;
             updateIntervalDisplay();
         }
-    });
+    };
 
-    newNextBtn.addEventListener('click', (e) => {
+    const handleNextClick = (e) => {
         console.log('Next interval clicked', {
             eventType: e.type,
             target: e.target,
@@ -376,12 +378,16 @@ function setupIntervalNavigation() {
             currentIntervalIndex = intervals.length - 1;
             updateIntervalDisplay();
         }
-    });
+    };
+    
+    // Add event listeners using the new handlers
+    newPrevBtn.addEventListener('click', handlePrevClick);
+    newNextBtn.addEventListener('click', handleNextClick);
     
     // Verify event listeners were added
     console.log('Event listeners added:', {
-        prevBtn: newPrevBtn.onclick !== null,
-        nextBtn: newNextBtn.onclick !== null
+        prevBtn: !!newPrevBtn.onclick,
+        nextBtn: !!newNextBtn.onclick
     });
     
     // Update button states
