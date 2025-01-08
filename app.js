@@ -277,6 +277,9 @@ function addInterval(interval = {}) {
     intervalEl.querySelector('.interval-end-time').value = interval.endTime || '17:00';
     intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
     intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
+
+    // Increment currentIntervalIndex when adding new interval
+    currentIntervalIndex = intervals.length;
     
     // Add set now handlers
     intervalEl.querySelector('.set-now-start').addEventListener('click', () => {
@@ -377,6 +380,7 @@ function setupIntervalNavigation() {
             addInterval();
             currentIntervalIndex = intervals.length - 1;
             updateIntervalDisplay();
+            updateNavButtons(); // Add this line to update button states
         }
     };
     
