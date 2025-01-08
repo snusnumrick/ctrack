@@ -233,10 +233,12 @@ function showEntryForm(date) {
     selectedDate = date;
     const dateStr = date.toISOString().split('T')[0];
     const entry = projectData.entries[dateStr] || { 
-        startTime: '09:00',
-        endTime: '17:00',
-        startMileage: 0,
-        endMileage: 0
+        intervals: [{
+            startTime: '09:00',
+            endTime: '17:00',
+            startMileage: 0,
+            endMileage: 0
+        }]
     };
     
     // Format date as "Month Day, Year"
@@ -247,11 +249,50 @@ function showEntryForm(date) {
     });
     
     document.getElementById('entry-date').textContent = formattedDate;
-    startTimeEl.value = entry.startTime;
-    endTimeEl.value = entry.endTime;
-    startMileageEl.value = entry.startMileage;
-    endMileageEl.value = entry.endMileage;
+    
+    // Clear existing intervals
+    const container = document.getElementById('interval-container');
+    container.innerHTML = '';
+    
+    // Add each interval
+    entry.intervals.forEach(interval => {
+        addInterval(interval);
+    });
+    
     entryFormEl.classList.remove('hidden');
+}
+
+function addInterval(interval = {}) {
+    const template = document.getElementById('interval-template');
+    const clone = template.content.cloneNode(true);
+    
+    const intervalEl = clone.querySelector('.interval-item');
+    intervalEl.querySelector('.interval-start-time').value = interval.startTime || '09:00';
+    intervalEl.querySelector('.interval-end-time').value = interval.endTime || '17:00';
+    intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
+    intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
+    
+    // Add remove handler
+    intervalEl.querySelector('.remove-interval').addEventListener('click', () => {
+        intervalEl.remove();
+    });
+    
+    // Add set now handlers
+    intervalEl.querySelector('.set-now-start').addEventListener('click', () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        intervalEl.querySelector('.interval-start-time').value = `${hours}:${minutes}`;
+    });
+    
+    intervalEl.querySelector('.set-now').addEventListener('click', () => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        intervalEl.querySelector('.interval-end-time').value = `${hours}:${minutes}`;
+    });
+    
+    document.getElementById('interval-container').appendChild(clone);
 }
 
 // Save entry
@@ -263,18 +304,34 @@ function calculateHours(startTime, endTime) {
 
 function saveEntry() {
     const dateStr = selectedDate.toISOString().split('T')[0];
-    const startTime = startTimeEl.value;
-    const endTime = endTimeEl.value;
-    const startMileage = parseFloat(startMileageEl.value) || 0;
-    const endMileage = parseFloat(endMileageEl.value) || 0;
+    const intervals = [];
+    let totalHours = 0;
+    let totalMiles = 0;
+    
+    // Get all intervals
+    document.querySelectorAll('.interval-item').forEach(intervalEl => {
+        const startTime = intervalEl.querySelector('.interval-start-time').value;
+        const endTime = intervalEl.querySelector('.interval-end-time').value;
+        const startMileage = parseFloat(intervalEl.querySelector('.interval-start-mileage').value) || 0;
+        const endMileage = parseFloat(intervalEl.querySelector('.interval-end-mileage').value) || 0;
+        
+        intervals.push({
+            startTime,
+            endTime,
+            startMileage,
+            endMileage,
+            hours: calculateHours(startTime, endTime),
+            miles: endMileage - startMileage
+        });
+        
+        totalHours += calculateHours(startTime, endTime);
+        totalMiles += (endMileage - startMileage);
+    });
     
     projectData.entries[dateStr] = {
-        startTime,
-        endTime,
-        startMileage,
-        endMileage,
-        hours: calculateHours(startTime, endTime),
-        miles: endMileage - startMileage
+        intervals,
+        hours: totalHours,
+        miles: totalMiles
     };
     
     entryFormEl.classList.add('hidden');
@@ -284,6 +341,11 @@ function saveEntry() {
 
 // Event listeners
 function setupEventListeners() {
+    // Add interval button
+    document.getElementById('add-interval').addEventListener('click', () => {
+        addInterval();
+    });
+
     document.getElementById('prev-month').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
