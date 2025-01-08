@@ -273,8 +273,28 @@ function addInterval(interval = {}) {
     const clone = template.content.cloneNode(true);
     
     const intervalEl = clone.querySelector('.interval-item');
-    intervalEl.querySelector('.interval-start-time').value = interval.startTime || '09:00';
-    intervalEl.querySelector('.interval-end-time').value = interval.endTime || '17:00';
+    // Initialize time fields as empty
+    intervalEl.querySelector('.interval-start-time').value = '';
+    intervalEl.querySelector('.interval-end-time').value = '';
+    
+    // Add click handlers to initialize with current time
+    intervalEl.querySelector('.interval-start-time').addEventListener('click', (e) => {
+        if (!e.target.value) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            e.target.value = `${hours}:${minutes}`;
+        }
+    });
+    
+    intervalEl.querySelector('.interval-end-time').addEventListener('click', (e) => {
+        if (!e.target.value) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            e.target.value = `${hours}:${minutes}`;
+        }
+    });
     intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
     intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
 
