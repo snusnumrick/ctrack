@@ -268,6 +268,7 @@ let currentIntervalIndex = 0;
 let intervals = [];
 
 function addInterval(interval = {}) {
+    console.log('Adding new interval', { interval });
     const template = document.getElementById('interval-template');
     const clone = template.content.cloneNode(true);
     
@@ -297,6 +298,11 @@ function addInterval(interval = {}) {
 }
 
 function updateIntervalDisplay() {
+    console.log('Updating interval display', { 
+        currentIntervalIndex,
+        intervalsLength: intervals.length,
+        intervals
+    });
     const container = document.getElementById('interval-container');
     container.innerHTML = '';
     if (intervals.length > 0) {
@@ -320,24 +326,33 @@ function updateNavButtons() {
 }
 
 function setupIntervalNavigation() {
-    document.getElementById('prev-interval').addEventListener('click', () => {
+    console.log('Setting up interval navigation');
+    
+    const prevBtn = document.getElementById('prev-interval');
+    const nextBtn = document.getElementById('next-interval');
+    
+    prevBtn.addEventListener('click', () => {
+        console.log('Previous interval clicked', { currentIntervalIndex });
         if (currentIntervalIndex > 0) {
             currentIntervalIndex--;
             updateIntervalDisplay();
         }
     });
 
-    document.getElementById('next-interval').addEventListener('click', () => {
+    nextBtn.addEventListener('click', () => {
+        console.log('Next interval clicked', { currentIntervalIndex, intervalsLength: intervals.length });
         if (currentIntervalIndex < intervals.length - 1) {
             currentIntervalIndex++;
             updateIntervalDisplay();
         } else {
-            // Add new interval when clicking next on last interval
+            console.log('Adding new interval');
             addInterval();
             currentIntervalIndex = intervals.length - 1;
             updateIntervalDisplay();
         }
     });
+    
+    console.log('Interval navigation setup complete');
 }
 
 // Save entry
