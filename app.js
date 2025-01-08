@@ -261,6 +261,7 @@ function showEntryForm(date) {
     // Reset interval state
     currentIntervalIndex = 0;
     updateIntervalDisplay();
+    setupIntervalNavigation();
 }
 
 let currentIntervalIndex = 0;
