@@ -4,8 +4,8 @@ A simple mobile-friendly web application for tracking daily work hours and miles
 
 ## Features
 
-- 📅 Calendar view with month navigation
-- ⏰ Time tracking with multiple intervals per day
+- 📅 Calendar view with month navigation (swipe left/right to change months)
+- ⏰ Time tracking with multiple intervals per day (swipe left/right to navigate intervals)
 - 🚗 Mileage tracking with start/end odometer readings
 - 💾 Automatic data persistence using localStorage with backup system
 - 📊 Monthly statistics with formatted hours (e.g., 4:30) and miles (e.g., 12.5)
@@ -20,12 +20,12 @@ A simple mobile-friendly web application for tracking daily work hours and miles
 2. Click on any past or current date to enter:
    - Add multiple work intervals with start/end times
    - Enter mileage for each interval
-3. Use the navigation buttons to:
-   - Switch between intervals
-   - Add new intervals
+3. Use the navigation buttons or swipe gestures to:
+   - Switch between intervals (swipe left/right)
+   - Add new intervals (swipe right on last interval)
    - Remove intervals (minimum 1 required)
 4. Click empty time fields to set current time
-5. Use the month navigation buttons to switch between months
+5. Use the month navigation buttons or swipe gestures to switch between months
 6. View your monthly totals in the stats section
 
 ## Technical Details
