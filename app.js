@@ -203,6 +203,7 @@ function createDayElement(day, isToday = false, isFuture = false, entry = {}) {
 
 // Update stats
 function formatMiles(miles) {
+    if (!miles || isNaN(miles) || miles === 0) return '';
     const rounded = Number(miles).toFixed(1);
     return rounded.endsWith('.0') ? `${Math.floor(miles)}mi` : rounded;
 }
@@ -453,11 +454,15 @@ function saveEntry() {
     intervals.forEach(intervalEl => {
         const startTime = intervalEl.querySelector('.interval-start-time').value;
         const endTime = intervalEl.querySelector('.interval-end-time').value;
-        const startMileage = parseFloat(intervalEl.querySelector('.interval-start-mileage').value) || 0;
-        const endMileage = parseFloat(intervalEl.querySelector('.interval-end-mileage').value) || 0;
+        const startMileage = parseFloat(intervalEl.querySelector('.interval-start-mileage').value);
+        const endMileage = parseFloat(intervalEl.querySelector('.interval-end-mileage').value);
         
         const hours = calculateHours(startTime, endTime);
-        const miles = endMileage - startMileage;
+        // Only calculate miles if both values are numbers
+        const miles = (typeof startMileage === 'number' && !isNaN(startMileage) &&
+                      typeof endMileage === 'number' && !isNaN(endMileage)) 
+                      ? endMileage - startMileage 
+                      : 0;
         
         savedIntervals.push({
             startTime,
