@@ -325,7 +325,7 @@ function updateNavButtons() {
     const nextBtn = document.getElementById('next-interval');
     
     prevBtn.disabled = currentIntervalIndex === 0;
-    nextBtn.disabled = currentIntervalIndex === intervals.length - 1;
+    nextBtn.disabled = false;
 }
 
 function setupIntervalNavigation() {
