@@ -123,9 +123,61 @@ function init() {
     projectTitleEl.classList.add('text-gray-900', 'dark:text-gray-100');
     renderCalendar();
     setupEventListeners();
+    setupSwipeGestures();
 
     // Save data before page unload
     window.addEventListener('beforeunload', saveProjectData);
+}
+
+// Swipe gesture handling
+function setupSwipeGestures() {
+    const container = document.getElementById('main-container');
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const minSwipeDistance = 50; // Minimum distance in pixels to consider it a swipe
+
+    container.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    container.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipeGesture();
+    });
+
+    function handleSwipeGesture() {
+        const distance = touchEndX - touchStartX;
+        
+        if (Math.abs(distance) < minSwipeDistance) return;
+
+        if (distance > 0) {
+            // Swipe right - previous month/interval
+            if (entryFormEl.classList.contains('hidden')) {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
+            } else {
+                if (currentIntervalIndex > 0) {
+                    currentIntervalIndex--;
+                    updateIntervalDisplay();
+                }
+            }
+        } else {
+            // Swipe left - next month/interval
+            if (entryFormEl.classList.contains('hidden')) {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            } else {
+                if (currentIntervalIndex < intervals.length - 1) {
+                    currentIntervalIndex++;
+                    updateIntervalDisplay();
+                } else {
+                    addInterval();
+                    currentIntervalIndex = intervals.length - 1;
+                    updateIntervalDisplay();
+                }
+            }
+        }
+    }
 }
 
 // Render calendar
