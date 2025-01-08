@@ -328,10 +328,20 @@ function updateNavButtons() {
 function setupIntervalNavigation() {
     console.log('Setting up interval navigation');
     
+    // Remove existing event listeners first
     const prevBtn = document.getElementById('prev-interval');
     const nextBtn = document.getElementById('next-interval');
     
-    prevBtn.addEventListener('click', () => {
+    // Clone buttons to remove existing listeners
+    const newPrevBtn = prevBtn.cloneNode(true);
+    const newNextBtn = nextBtn.cloneNode(true);
+    
+    // Replace buttons in DOM
+    prevBtn.replaceWith(newPrevBtn);
+    nextBtn.replaceWith(newNextBtn);
+    
+    // Add new event listeners
+    newPrevBtn.addEventListener('click', () => {
         console.log('Previous interval clicked', { currentIntervalIndex });
         if (currentIntervalIndex > 0) {
             currentIntervalIndex--;
@@ -339,7 +349,7 @@ function setupIntervalNavigation() {
         }
     });
 
-    nextBtn.addEventListener('click', () => {
+    newNextBtn.addEventListener('click', () => {
         console.log('Next interval clicked', { currentIntervalIndex, intervalsLength: intervals.length });
         if (currentIntervalIndex < intervals.length - 1) {
             currentIntervalIndex++;
@@ -351,6 +361,9 @@ function setupIntervalNavigation() {
             updateIntervalDisplay();
         }
     });
+    
+    // Enable/disable buttons based on current state
+    updateNavButtons();
     
     console.log('Interval navigation setup complete');
 }
