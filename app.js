@@ -341,16 +341,26 @@ function setupIntervalNavigation() {
     nextBtn.replaceWith(newNextBtn);
     
     // Add new event listeners
-    newPrevBtn.addEventListener('click', () => {
-        console.log('Previous interval clicked', { currentIntervalIndex });
+    newPrevBtn.addEventListener('click', (e) => {
+        console.log('Previous interval clicked', { 
+            event: e,
+            currentIntervalIndex,
+            intervalsLength: intervals.length,
+            intervals
+        });
         if (currentIntervalIndex > 0) {
             currentIntervalIndex--;
             updateIntervalDisplay();
         }
     });
 
-    newNextBtn.addEventListener('click', () => {
-        console.log('Next interval clicked', { currentIntervalIndex, intervalsLength: intervals.length });
+    newNextBtn.addEventListener('click', (e) => {
+        console.log('Next interval clicked', { 
+            event: e,
+            currentIntervalIndex,
+            intervalsLength: intervals.length,
+            intervals
+        });
         if (currentIntervalIndex < intervals.length - 1) {
             currentIntervalIndex++;
             updateIntervalDisplay();
