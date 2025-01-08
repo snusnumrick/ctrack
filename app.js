@@ -388,14 +388,8 @@ function setupIntervalNavigation() {
     newPrevBtn.addEventListener('click', handlePrevClick);
     newNextBtn.addEventListener('click', handleNextClick);
     
-    // Verify event listeners were added
-    const prevListenerCount = newPrevBtn.getEventListeners?.('click')?.length || 0;
-    const nextListenerCount = newNextBtn.getEventListeners?.('click')?.length || 0;
-    
-    console.log('Event listeners added:', {
-        prevBtn: prevListenerCount > 0,
-        nextBtn: nextListenerCount > 0
-    });
+    // Debug log that listeners were added
+    console.log('Event listeners added to navigation buttons');
     
     // Update button states
     updateNavButtons();
@@ -405,17 +399,6 @@ function setupIntervalNavigation() {
         intervalsLength: intervals.length
     });
     
-    // Add helper to check event listeners
-    if (!Element.prototype.getEventListeners) {
-        Element.prototype.getEventListeners = function(type) {
-            const listeners = [];
-            const events = getEventListeners(this);
-            if (events[type]) {
-                listeners.push(...events[type]);
-            }
-            return listeners;
-        };
-    }
 }
 
 // Save entry
