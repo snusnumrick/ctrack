@@ -258,6 +258,7 @@ function showEntryForm(date) {
     });
     
     entryFormEl.classList.remove('hidden');
+    setupIntervalNavigation();
 }
 
 let currentIntervalIndex = 0;
