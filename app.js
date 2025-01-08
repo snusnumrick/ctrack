@@ -115,6 +115,7 @@ function initDOMElements() {
     endTimeEl = document.getElementById('end-time');
     setNowEl = document.getElementById('set-now');
     setNowEl.innerHTML = '<i class="fas fa-angles-down"></i>';
+    document.getElementById('set-now-start').innerHTML = '<i class="fas fa-angles-down"></i>';
     startMileageEl = document.getElementById('start-mileage');
     endMileageEl = document.getElementById('end-mileage');
 }
