@@ -248,9 +248,9 @@ function showEntryForm(date) {
     entryDateEl.textContent = formattedDate;
     entryDateEl.classList.add('dark:text-gray-100');
     
-    // Clear existing intervals
-    const container = document.getElementById('interval-container');
-    container.innerHTML = '';
+    // Reset interval state
+    intervals = [];
+    currentIntervalIndex = 0;
     
     // Add each interval
     entry.intervals.forEach(interval => {
@@ -259,6 +259,9 @@ function showEntryForm(date) {
     
     entryFormEl.classList.remove('hidden');
 }
+
+let currentIntervalIndex = 0;
+let intervals = [];
 
 function addInterval(interval = {}) {
     const template = document.getElementById('interval-template');
@@ -269,11 +272,6 @@ function addInterval(interval = {}) {
     intervalEl.querySelector('.interval-end-time').value = interval.endTime || '17:00';
     intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
     intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
-    
-    // Add remove handler
-    intervalEl.querySelector('.remove-interval').addEventListener('click', () => {
-        intervalEl.remove();
-    });
     
     // Add set now handlers
     intervalEl.querySelector('.set-now-start').addEventListener('click', () => {
@@ -290,7 +288,52 @@ function addInterval(interval = {}) {
         intervalEl.querySelector('.interval-end-time').value = `${hours}:${minutes}`;
     });
     
-    document.getElementById('interval-container').appendChild(clone);
+    intervals.push(intervalEl);
+    updateIntervalDisplay();
+}
+
+function updateIntervalDisplay() {
+    const container = document.getElementById('interval-container');
+    container.innerHTML = '';
+    if (intervals.length > 0) {
+        container.appendChild(intervals[currentIntervalIndex]);
+    }
+    updateIntervalCounter();
+    updateNavButtons();
+}
+
+function updateIntervalCounter() {
+    const counter = document.getElementById('interval-counter');
+    counter.textContent = `${currentIntervalIndex + 1}/${intervals.length}`;
+}
+
+function updateNavButtons() {
+    const prevBtn = document.getElementById('prev-interval');
+    const nextBtn = document.getElementById('next-interval');
+    
+    prevBtn.disabled = currentIntervalIndex === 0;
+    nextBtn.disabled = currentIntervalIndex === intervals.length - 1;
+}
+
+function setupIntervalNavigation() {
+    document.getElementById('prev-interval').addEventListener('click', () => {
+        if (currentIntervalIndex > 0) {
+            currentIntervalIndex--;
+            updateIntervalDisplay();
+        }
+    });
+
+    document.getElementById('next-interval').addEventListener('click', () => {
+        if (currentIntervalIndex < intervals.length - 1) {
+            currentIntervalIndex++;
+            updateIntervalDisplay();
+        } else {
+            // Add new interval when clicking next on last interval
+            addInterval();
+            currentIntervalIndex = intervals.length - 1;
+            updateIntervalDisplay();
+        }
+    });
 }
 
 // Save entry
@@ -339,10 +382,8 @@ function saveEntry() {
 
 // Event listeners
 function setupEventListeners() {
-    // Add interval button
-    document.getElementById('add-interval').addEventListener('click', () => {
-        addInterval();
-    });
+    setupIntervalNavigation();
+    
 
     document.getElementById('prev-month').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
