@@ -111,13 +111,9 @@ function initDOMElements() {
     currentMonthEl = document.getElementById('current-month');
     calendarEl = document.getElementById('calendar');
     entryFormEl = document.getElementById('entry-form');
-    startTimeEl = document.getElementById('start-time');
-    endTimeEl = document.getElementById('end-time');
-    setNowEl = document.getElementById('set-now');
-    setNowEl.innerHTML = '<i class="fas fa-angles-down"></i>';
-    document.getElementById('set-now-start').innerHTML = '<i class="fas fa-angles-down"></i>';
-    startMileageEl = document.getElementById('start-mileage');
-    endMileageEl = document.getElementById('end-mileage');
+    
+    // Remove references to old single time inputs
+    // Set now buttons are now handled within each interval
 }
 
 // Initialize app
