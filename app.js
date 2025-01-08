@@ -244,7 +244,9 @@ function showEntryForm(date) {
         year: 'numeric'
     });
     
-    document.getElementById('entry-date').textContent = formattedDate;
+    const entryDateEl = document.getElementById('entry-date');
+    entryDateEl.textContent = formattedDate;
+    entryDateEl.classList.add('dark:text-gray-100');
     
     // Clear existing intervals
     const container = document.getElementById('interval-container');
