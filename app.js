@@ -217,11 +217,18 @@ function updateStats() {
     const currentMonthEntries = Object.entries(projectData.entries)
         .filter(([date]) => date.startsWith(currentDate.toISOString().slice(0, 7)));
     
-    const totalHours = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.hours || 0), 0);
-    const totalMiles = currentMonthEntries.reduce((sum, [, entry]) => sum + (entry.miles || 0), 0);
+    const totals = currentMonthEntries.reduce((acc, [, entry]) => {
+        if (entry.intervals) {
+            entry.hours = entry.intervals.reduce((sum, interval) => sum + (interval.hours || 0), 0);
+            entry.miles = entry.intervals.reduce((sum, interval) => sum + (interval.miles || 0), 0);
+        }
+        acc.hours += entry.hours || 0;
+        acc.miles += entry.miles || 0;
+        return acc;
+    }, { hours: 0, miles: 0 });
     
-    totalHoursEl.textContent = formatDuration(totalHours);
-    totalMilesEl.textContent = Number(totalMiles).toFixed(1);
+    totalHoursEl.textContent = formatDuration(totals.hours);
+    totalMilesEl.textContent = Number(totals.miles).toFixed(1);
 }
 
 // Show entry form
