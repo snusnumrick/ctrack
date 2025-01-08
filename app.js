@@ -301,6 +301,17 @@ function addInterval(interval = {}) {
     // Increment currentIntervalIndex when adding new interval
     currentIntervalIndex = intervals.length;
     
+    // Add remove interval handler
+    intervalEl.querySelector('.remove-interval').addEventListener('click', () => {
+        if (intervals.length > 1) {
+            intervals.splice(currentIntervalIndex, 1);
+            if (currentIntervalIndex >= intervals.length) {
+                currentIntervalIndex = intervals.length - 1;
+            }
+            updateIntervalDisplay();
+        }
+    });
+
     // Add set now handlers
     intervalEl.querySelector('.set-now-start').addEventListener('click', () => {
         const now = new Date();
@@ -343,9 +354,15 @@ function updateIntervalCounter() {
 function updateNavButtons() {
     const prevBtn = document.getElementById('prev-interval');
     const nextBtn = document.getElementById('next-interval');
+    const removeBtns = document.querySelectorAll('.remove-interval');
     
     prevBtn.disabled = currentIntervalIndex === 0;
     nextBtn.disabled = false;
+    
+    // Disable remove button if there's only one interval
+    removeBtns.forEach(btn => {
+        btn.disabled = intervals.length === 1;
+    });
 }
 
 function setupIntervalNavigation() {
