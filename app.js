@@ -453,32 +453,36 @@ function calculateHours(startTime, endTime) {
 
 function saveEntry() {
     const dateStr = selectedDate.toISOString().split('T')[0];
-    const intervals = [];
+    const savedIntervals = [];
     let totalHours = 0;
     let totalMiles = 0;
     
-    // Get all intervals
-    document.querySelectorAll('.interval-item').forEach(intervalEl => {
+    // Get all intervals from the DOM
+    intervals.forEach(intervalEl => {
         const startTime = intervalEl.querySelector('.interval-start-time').value;
         const endTime = intervalEl.querySelector('.interval-end-time').value;
         const startMileage = parseFloat(intervalEl.querySelector('.interval-start-mileage').value) || 0;
         const endMileage = parseFloat(intervalEl.querySelector('.interval-end-mileage').value) || 0;
         
-        intervals.push({
+        const hours = calculateHours(startTime, endTime);
+        const miles = endMileage - startMileage;
+        
+        savedIntervals.push({
             startTime,
             endTime,
             startMileage,
             endMileage,
-            hours: calculateHours(startTime, endTime),
-            miles: endMileage - startMileage
+            hours,
+            miles
         });
         
-        totalHours += calculateHours(startTime, endTime);
-        totalMiles += (endMileage - startMileage);
+        totalHours += hours;
+        totalMiles += miles;
     });
     
+    // Save all intervals and totals
     projectData.entries[dateStr] = {
-        intervals,
+        intervals: savedIntervals,
         hours: totalHours,
         miles: totalMiles
     };
