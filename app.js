@@ -318,21 +318,6 @@ function addInterval(interval = {}) {
         }
     });
 
-    // Add set now handlers
-    intervalEl.querySelector('.set-now-start').addEventListener('click', () => {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        intervalEl.querySelector('.interval-start-time').value = `${hours}:${minutes}`;
-    });
-    
-    intervalEl.querySelector('.set-now').addEventListener('click', () => {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        intervalEl.querySelector('.interval-end-time').value = `${hours}:${minutes}`;
-    });
-    
     intervals.push(intervalEl);
     updateIntervalDisplay();
 }
