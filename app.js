@@ -308,8 +308,8 @@ function addInterval(interval = {}) {
             e.target.value = `${hours}:${minutes}`;
         }
     });
-    intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || 0;
-    intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || 0;
+    intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || '';
+    intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || '';
 
     // Increment currentIntervalIndex when adding new interval
     currentIntervalIndex = intervals.length;
