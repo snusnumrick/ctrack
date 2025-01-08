@@ -328,25 +328,31 @@ function updateNavButtons() {
 function setupIntervalNavigation() {
     console.log('Setting up interval navigation');
     
-    // Remove existing event listeners first
+    // Get button references
     const prevBtn = document.getElementById('prev-interval');
     const nextBtn = document.getElementById('next-interval');
     
-    // Clone buttons to remove existing listeners
+    // Debug button states
+    console.log('Button states before setup:', {
+        prevBtnExists: !!prevBtn,
+        nextBtnExists: !!nextBtn,
+        prevBtnDisabled: prevBtn?.disabled,
+        nextBtnDisabled: nextBtn?.disabled
+    });
+    
+    // Remove any existing event listeners
     const newPrevBtn = prevBtn.cloneNode(true);
     const newNextBtn = nextBtn.cloneNode(true);
-    
-    // Replace buttons in DOM
     prevBtn.replaceWith(newPrevBtn);
     nextBtn.replaceWith(newNextBtn);
     
-    // Add new event listeners
+    // Add click handlers with more detailed logging
     newPrevBtn.addEventListener('click', (e) => {
-        console.log('Previous interval clicked', { 
-            event: e,
+        console.log('Previous interval clicked', {
+            eventType: e.type,
+            target: e.target,
             currentIntervalIndex,
-            intervalsLength: intervals.length,
-            intervals
+            intervalsLength: intervals.length
         });
         if (currentIntervalIndex > 0) {
             currentIntervalIndex--;
@@ -355,27 +361,36 @@ function setupIntervalNavigation() {
     });
 
     newNextBtn.addEventListener('click', (e) => {
-        console.log('Next interval clicked', { 
-            event: e,
+        console.log('Next interval clicked', {
+            eventType: e.type,
+            target: e.target,
             currentIntervalIndex,
-            intervalsLength: intervals.length,
-            intervals
+            intervalsLength: intervals.length
         });
         if (currentIntervalIndex < intervals.length - 1) {
             currentIntervalIndex++;
             updateIntervalDisplay();
         } else {
-            console.log('Adding new interval');
+            console.log('Adding new interval via next button click');
             addInterval();
             currentIntervalIndex = intervals.length - 1;
             updateIntervalDisplay();
         }
     });
     
-    // Enable/disable buttons based on current state
+    // Verify event listeners were added
+    console.log('Event listeners added:', {
+        prevBtn: newPrevBtn.onclick !== null,
+        nextBtn: newNextBtn.onclick !== null
+    });
+    
+    // Update button states
     updateNavButtons();
     
-    console.log('Interval navigation setup complete');
+    console.log('Interval navigation setup complete', {
+        currentIntervalIndex,
+        intervalsLength: intervals.length
+    });
 }
 
 // Save entry
