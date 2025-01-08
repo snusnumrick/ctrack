@@ -239,8 +239,8 @@ function showEntryForm(date) {
         intervals: [{
             startTime: '',
             endTime: '',
-            startMileage: 0,
-            endMileage: 0
+            startMileage: null,
+            endMileage: null
         }]
     };
     
@@ -264,8 +264,8 @@ function showEntryForm(date) {
         const newInterval = {
             startTime: interval.startTime || '',
             endTime: interval.endTime || '',
-            startMileage: interval.startMileage || 0,
-            endMileage: interval.endMileage || 0
+            startMileage: interval.startMileage || null,
+            endMileage: interval.endMileage || null
         };
         addInterval(newInterval);
     });
