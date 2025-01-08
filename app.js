@@ -258,7 +258,9 @@ function showEntryForm(date) {
     });
     
     entryFormEl.classList.remove('hidden');
-    setupIntervalNavigation();
+    // Reset interval state
+    currentIntervalIndex = 0;
+    updateIntervalDisplay();
 }
 
 let currentIntervalIndex = 0;
@@ -383,9 +385,6 @@ function saveEntry() {
 
 // Event listeners
 function setupEventListeners() {
-    setupIntervalNavigation();
-    
-
     document.getElementById('prev-month').addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() - 1);
         renderCalendar();
