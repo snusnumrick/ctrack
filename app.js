@@ -340,7 +340,7 @@ function setupIntervalNavigation() {
         nextBtnDisabled: nextBtn?.disabled
     });
     
-    // Remove any existing event listeners
+    // Remove any existing event listeners by replacing buttons
     const newPrevBtn = prevBtn.cloneNode(true);
     const newNextBtn = nextBtn.cloneNode(true);
     
@@ -385,9 +385,12 @@ function setupIntervalNavigation() {
     newNextBtn.addEventListener('click', handleNextClick);
     
     // Verify event listeners were added
+    const prevListenerCount = newPrevBtn.getEventListeners?.('click')?.length || 0;
+    const nextListenerCount = newNextBtn.getEventListeners?.('click')?.length || 0;
+    
     console.log('Event listeners added:', {
-        prevBtn: !!newPrevBtn.onclick,
-        nextBtn: !!newNextBtn.onclick
+        prevBtn: prevListenerCount > 0,
+        nextBtn: nextListenerCount > 0
     });
     
     // Update button states
@@ -397,6 +400,18 @@ function setupIntervalNavigation() {
         currentIntervalIndex,
         intervalsLength: intervals.length
     });
+    
+    // Add helper to check event listeners
+    if (!Element.prototype.getEventListeners) {
+        Element.prototype.getEventListeners = function(type) {
+            const listeners = [];
+            const events = getEventListeners(this);
+            if (events[type]) {
+                listeners.push(...events[type]);
+            }
+            return listeners;
+        };
+    }
 }
 
 // Save entry
