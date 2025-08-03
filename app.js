@@ -372,8 +372,18 @@ function setupTimeInputHandlers(input) {
         validateTimeInput(input);
     });
     
-    // Set current time on focus if empty
+    // Ensure numeric keyboard on touch (before focus)
+    input.addEventListener('touchstart', (e) => {
+        e.target.setAttribute('inputmode', 'decimal');
+        e.target.setAttribute('pattern', '[0-9]*');
+    });
+    
+    // Set current time on focus if empty and ensure numeric keyboard
     input.addEventListener('focus', (e) => {
+        // Force numeric keyboard attributes on focus (helps with editing)
+        e.target.setAttribute('inputmode', 'decimal');
+        e.target.setAttribute('pattern', '[0-9]*');
+        
         if (!e.target.value) {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
