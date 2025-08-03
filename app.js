@@ -124,9 +124,29 @@ function init() {
     renderCalendar();
     setupEventListeners();
     setupSwipeGestures();
+    
+    // Handle URL shortcuts
+    handleURLShortcuts();
 
     // Save data before page unload
     window.addEventListener('beforeunload', saveProjectData);
+}
+
+// Handle URL shortcuts from manifest
+function handleURLShortcuts() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const action = urlParams.get('action');
+    
+    if (action === 'add-today') {
+        // Open today's entry form
+        const today = new Date();
+        showEntryForm(today);
+        
+        // Clear the URL parameter to avoid reopening on refresh
+        const url = new URL(window.location);
+        url.searchParams.delete('action');
+        window.history.replaceState({}, document.title, url.pathname);
+    }
 }
 
 // Swipe gesture handling
@@ -813,6 +833,12 @@ function setupEventListeners() {
 
     document.getElementById('cancel-entry').addEventListener('click', () => {
         entryFormEl.classList.add('hidden');
+    });
+
+    // FAB (Floating Action Button) event listener
+    document.getElementById('fab-add-today').addEventListener('click', () => {
+        const today = new Date();
+        showEntryForm(today);
     });
 
     // Set now functionality is handled within each interval

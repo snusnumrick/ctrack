@@ -9,7 +9,8 @@ const ASSETS = [
   '/favicon.ico',
   '/icons/icon-16x16.png',
   '/icons/icon-32x32.png',
-  '/icons/icon-48x48.png'
+  '/icons/icon-48x48.png',
+  '/icons/shortcut-add-entry.svg'
 ];
 
 // Install service worker and cache assets
