@@ -372,19 +372,47 @@ function setupTimeInputHandlers(input) {
         validateTimeInput(input);
     });
     
+    // Force numeric keyboard with aggressive approach
+    function forceNumericKeyboard(element) {
+        // Store current value and selection
+        const currentValue = element.value;
+        const selectionStart = element.selectionStart;
+        const selectionEnd = element.selectionEnd;
+        
+        // Temporarily clear the field to force iOS to reconsider keyboard type
+        element.value = '';
+        element.setAttribute('inputmode', 'decimal');
+        element.setAttribute('pattern', '[0-9]*');
+        element.setAttribute('type', 'tel');
+        
+        // Use setTimeout to restore value after iOS makes keyboard decision
+        setTimeout(() => {
+            element.value = currentValue;
+            // Restore cursor position
+            if (selectionStart !== null && selectionEnd !== null) {
+                element.setSelectionRange(selectionStart, selectionEnd);
+            }
+        }, 10);
+    }
+    
     // Ensure numeric keyboard on touch (before focus)
     input.addEventListener('touchstart', (e) => {
         e.target.setAttribute('inputmode', 'decimal');
         e.target.setAttribute('pattern', '[0-9]*');
+        e.target.setAttribute('type', 'tel');
     });
     
-    // Set current time on focus if empty and ensure numeric keyboard
+    // Handle focus - set current time if empty and force numeric keyboard
     input.addEventListener('focus', (e) => {
-        // Force numeric keyboard attributes on focus (helps with editing)
-        e.target.setAttribute('inputmode', 'decimal');
-        e.target.setAttribute('pattern', '[0-9]*');
-        
-        if (!e.target.value) {
+        if (e.target.value && e.target.value.length > 0) {
+            // Field has content - use aggressive approach to force numeric keyboard
+            forceNumericKeyboard(e.target);
+        } else {
+            // Empty field - set current time
+            e.target.setAttribute('inputmode', 'decimal');
+            e.target.setAttribute('pattern', '[0-9]*');
+            e.target.setAttribute('type', 'tel');
+            
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
@@ -393,6 +421,16 @@ function setupTimeInputHandlers(input) {
         }
         // Select all text for easy replacement
         e.target.select();
+    });
+    
+    // Additional click handler for stubborn cases
+    input.addEventListener('click', (e) => {
+        // Small delay to let focus event complete first
+        setTimeout(() => {
+            if (e.target.value && e.target.value.length > 0) {
+                forceNumericKeyboard(e.target);
+            }
+        }, 50);
     });
     
     // Validate on blur
