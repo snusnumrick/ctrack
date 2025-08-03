@@ -333,6 +333,150 @@ function showEntryForm(date) {
 let currentIntervalIndex = 0;
 let intervals = [];
 
+// Enhanced time input handling
+function setupTimeInputHandlers(input) {
+    // Format time as user types
+    input.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/[^\d]/g, ''); // Remove non-digits
+        
+        if (value.length >= 3) {
+            // Auto-format with colon (e.g., 1530 -> 15:30)
+            value = value.slice(0, 2) + ':' + value.slice(2, 4);
+        }
+        
+        e.target.value = value;
+        validateTimeInput(e.target);
+    });
+    
+    // Handle paste events
+    input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const paste = (e.clipboardData || window.clipboardData).getData('text');
+        const cleaned = paste.replace(/[^\d:]/g, '');
+        input.value = cleaned;
+        validateTimeInput(input);
+    });
+    
+    // Set current time on focus if empty
+    input.addEventListener('focus', (e) => {
+        if (!e.target.value) {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            e.target.value = `${hours}:${minutes}`;
+            validateTimeInput(e.target);
+        }
+        // Select all text for easy replacement
+        e.target.select();
+    });
+    
+    // Validate on blur
+    input.addEventListener('blur', (e) => {
+        validateTimeInput(e.target);
+    });
+    
+    // Handle keyboard shortcuts
+    input.addEventListener('keydown', (e) => {
+        // Allow: backspace, delete, tab, escape, enter
+        if ([8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (e.keyCode === 65 && e.ctrlKey === true) ||
+            (e.keyCode === 67 && e.ctrlKey === true) ||
+            (e.keyCode === 86 && e.ctrlKey === true) ||
+            (e.keyCode === 88 && e.ctrlKey === true)) {
+            return;
+        }
+        // Ensure that it is a number or colon and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && 
+            (e.keyCode < 96 || e.keyCode > 105) && 
+            e.keyCode !== 186) { // 186 is colon
+            e.preventDefault();
+        }
+    });
+}
+
+function validateTimeInput(input) {
+    const value = input.value;
+    const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    
+    // Remove any existing error styling
+    input.classList.remove('border-red-500', 'border-green-500');
+    
+    if (value === '') {
+        // Empty is okay
+        return true;
+    }
+    
+    if (timeRegex.test(value)) {
+        // Valid time format - now check start/end time relationship
+        validateTimeSequence(input);
+        return true;
+    } else {
+        // Invalid time format
+        input.classList.add('border-red-500');
+        return false;
+    }
+}
+
+function validateTimeSequence(changedInput) {
+    // Find the interval container for this input
+    const intervalEl = changedInput.closest('.interval-item');
+    if (!intervalEl) return;
+    
+    const startTimeInput = intervalEl.querySelector('.interval-start-time');
+    const endTimeInput = intervalEl.querySelector('.interval-end-time');
+    
+    // Remove previous sequence validation styling
+    startTimeInput.classList.remove('border-red-500', 'border-green-500');
+    endTimeInput.classList.remove('border-red-500', 'border-green-500');
+    
+    // Only validate if both fields have values
+    if (!startTimeInput.value || !endTimeInput.value) {
+        // If both have values, mark as valid format (but not sequence)
+        if (startTimeInput.value && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(startTimeInput.value)) {
+            startTimeInput.classList.add('border-green-500');
+        }
+        if (endTimeInput.value && /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(endTimeInput.value)) {
+            endTimeInput.classList.add('border-green-500');
+        }
+        return;
+    }
+    
+    const startTime = startTimeInput.value;
+    const endTime = endTimeInput.value;
+    
+    // Parse times
+    const [startH, startM] = startTime.split(':').map(Number);
+    const [endH, endM] = endTime.split(':').map(Number);
+    const startMinutes = startH * 60 + startM;
+    const endMinutes = endH * 60 + endM;
+    
+    if (endMinutes <= startMinutes) {
+        // End time is not after start time
+        startTimeInput.classList.add('border-red-500');
+        endTimeInput.classList.add('border-red-500');
+        
+        // Show tooltip or error message
+        const errorMsg = intervalEl.querySelector('.time-error-msg');
+        if (!errorMsg) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'time-error-msg text-red-500 text-xs mt-1';
+            errorDiv.textContent = 'End time must be after start time';
+            endTimeInput.parentNode.appendChild(errorDiv);
+        }
+    } else {
+        // Valid sequence
+        startTimeInput.classList.add('border-green-500');
+        endTimeInput.classList.add('border-green-500');
+        
+        // Remove error message if it exists
+        const errorMsg = intervalEl.querySelector('.time-error-msg');
+        if (errorMsg) {
+            errorMsg.remove();
+        }
+    }
+}
+
 function addInterval(interval = {}) {
     console.log('Adding new interval', {interval});
     const template = document.getElementById('interval-template');
@@ -343,23 +487,13 @@ function addInterval(interval = {}) {
     intervalEl.querySelector('.interval-start-time').value = interval.startTime || '';
     intervalEl.querySelector('.interval-end-time').value = interval.endTime || '';
 
-    // Add click handlers to initialize with current time
-    intervalEl.querySelector('.interval-start-time').addEventListener('click', (e) => {
-        if (!e.target.value) {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            e.target.value = `${hours}:${minutes}`;
-        }
-    });
-
-    intervalEl.querySelector('.interval-end-time').addEventListener('click', (e) => {
-        if (!e.target.value) {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            e.target.value = `${hours}:${minutes}`;
-        }
+    // Add enhanced time input handlers
+    const startTimeInput = intervalEl.querySelector('.interval-start-time');
+    const endTimeInput = intervalEl.querySelector('.interval-end-time');
+    
+    // Setup time input handlers for both start and end time
+    [startTimeInput, endTimeInput].forEach(input => {
+        setupTimeInputHandlers(input);
     });
     intervalEl.querySelector('.interval-start-mileage').value = interval.startMileage || '';
     intervalEl.querySelector('.interval-end-mileage').value = interval.endMileage || '';
@@ -491,12 +625,72 @@ function setupIntervalNavigation() {
 
 // Save entry
 function calculateHours(startTime, endTime) {
+    if (!startTime || !endTime) {
+        return 0;
+    }
+    
     const [startH, startM] = startTime.split(':').map(Number);
     const [endH, endM] = endTime.split(':').map(Number);
+    
+    if (isNaN(startH) || isNaN(startM) || isNaN(endH) || isNaN(endM)) {
+        return 0;
+    }
+    
     return ((endH * 60 + endM) - (startH * 60 + startM)) / 60;
 }
 
 function saveEntry() {
+    // Validate all time inputs first
+    let hasValidationErrors = false;
+    let errorMessages = [];
+    
+    intervals.forEach((intervalEl, index) => {
+        const startTimeInput = intervalEl.querySelector('.interval-start-time');
+        const endTimeInput = intervalEl.querySelector('.interval-end-time');
+        
+        // Validate format
+        const startValid = validateTimeInput(startTimeInput);
+        const endValid = validateTimeInput(endTimeInput);
+        
+        if (!startValid || !endValid) {
+            hasValidationErrors = true;
+            errorMessages.push(`Interval ${index + 1}: Invalid time format. Use 24-hour format (e.g., 15:30)`);
+        }
+        
+        // Check if both times are provided and valid for sequence validation
+        if (startTimeInput.value && endTimeInput.value && startValid && endValid) {
+            const startTime = startTimeInput.value;
+            const endTime = endTimeInput.value;
+            
+            // Validate that end time is after start time
+            const [startH, startM] = startTime.split(':').map(Number);
+            const [endH, endM] = endTime.split(':').map(Number);
+            const startMinutes = startH * 60 + startM;
+            const endMinutes = endH * 60 + endM;
+            
+            if (endMinutes <= startMinutes) {
+                startTimeInput.classList.add('border-red-500');
+                endTimeInput.classList.add('border-red-500');
+                hasValidationErrors = true;
+                errorMessages.push(`Interval ${index + 1}: End time (${endTime}) must be after start time (${startTime})`);
+            }
+        }
+        
+        // Check if at least one time is provided (can't have completely empty interval)
+        if (!startTimeInput.value && !endTimeInput.value) {
+            hasValidationErrors = true;
+            errorMessages.push(`Interval ${index + 1}: Please provide at least start and end times`);
+        }
+    });
+    
+    if (hasValidationErrors) {
+        const errorMessage = errorMessages.length > 0 
+            ? errorMessages.join('\n') 
+            : 'Please fix the time input errors before saving.';
+        alert(errorMessage);
+        return;
+    }
+    
     const dateStr = selectedDate.toISOString().split('T')[0];
     const savedIntervals = [];
     let totalHours = 0;
