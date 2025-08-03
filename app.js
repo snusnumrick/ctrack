@@ -337,11 +337,26 @@ let intervals = [];
 function setupTimeInputHandlers(input) {
     // Format time as user types
     input.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/[^\d]/g, ''); // Remove non-digits
+        let value = e.target.value.replace(/[^\d:]/g, ''); // Remove non-digits except colon
         
-        if (value.length >= 3) {
+        // Remove multiple colons
+        const colonCount = (value.match(/:/g) || []).length;
+        if (colonCount > 1) {
+            value = value.replace(/:/g, '');
+        }
+        
+        // Auto-format with colon for numeric input
+        if (value.length >= 3 && !value.includes(':')) {
             // Auto-format with colon (e.g., 1530 -> 15:30)
             value = value.slice(0, 2) + ':' + value.slice(2, 4);
+        } else if (value.length === 2 && !value.includes(':') && e.inputType !== 'deleteContentBackward') {
+            // Auto-add colon after 2 digits when typing forward
+            value = value + ':';
+        }
+        
+        // Limit to 5 characters (HH:MM)
+        if (value.length > 5) {
+            value = value.slice(0, 5);
         }
         
         e.target.value = value;
